@@ -171,6 +171,7 @@ function UploadEvent() {
                 </Text>
                 <div className={styles.uploadDiv}>
                   <input
+                    multiple
                     type="file"
                     onChange={onImageChange}
                     accept="image/*"
