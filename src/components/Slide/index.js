@@ -7,10 +7,10 @@ import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
 import { useSwiper } from "swiper/react";
 
-const ContentWrapper = ({ allowClick, children }) => {
+const ContentWrapper = ({ allowClick, eventId, children }) => {
   const Component = allowClick
     ? () => (
-        <Link to="/event-detail" draggable="false">
+        <Link to={`/event-detail/${eventId}`} draggable="false">
           {children}
         </Link>
       )
@@ -79,7 +79,7 @@ function Slide({
           <Button>Gallery</Button>
         </div>
         <div className={styles.content} {...contentCarouselHandler}>
-          <ContentWrapper allowClick={allowLinks}>
+          <ContentWrapper allowClick={allowLinks} eventId={event._id}>
             <div className="d-flex justify-content-between px-3">
               <h3>{event.title}</h3>
 

@@ -10,129 +10,135 @@ import Button from "../../components/Button";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import RouteTitle from "../../components/RouteTitle/RouteTitle";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllEvent } from "../../services/Events";
+import { ALL_QUERIES } from "../../utils/endpoints";
+import Loader from "../../components/Loader";
 
-const eventData = [
-  {
-    image: "/img/event-1.png",
-    title: "Art1 Member Monday",
-    gallery: [
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-      {
-        image: "/img/event-3.png",
-      },
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-    ],
-  },
-  {
-    image: "/img/event-2.png",
-    title: "Art2 Member Monday",
-    gallery: [
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-      {
-        image: "/img/event-3.png",
-      },
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-    ],
-  },
-  {
-    image: "/img/event-3.png",
-    title: "Art3 Member Monday",
-    gallery: [
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-      {
-        image: "/img/event-3.png",
-      },
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-    ],
-  },
-  {
-    image: "/img/event-1.png",
-    title: "Art4 Member Monday",
-    gallery: [
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-      {
-        image: "/img/event-3.png",
-      },
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-    ],
-  },
-  {
-    image: "/img/event-2.png",
-    title: "Art5 Member Monday",
-    gallery: [
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-      {
-        image: "/img/event-3.png",
-      },
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-    ],
-  },
-];
+// const eventData = [
+//   {
+//     image: "/img/event-1.png",
+//     title: "Art1 Member Monday",
+//     gallery: [
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//       {
+//         image: "/img/event-3.png",
+//       },
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//     ],
+//   },
+//   {
+//     image: "/img/event-2.png",
+//     title: "Art2 Member Monday",
+//     gallery: [
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//       {
+//         image: "/img/event-3.png",
+//       },
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//     ],
+//   },
+//   {
+//     image: "/img/event-3.png",
+//     title: "Art3 Member Monday",
+//     gallery: [
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//       {
+//         image: "/img/event-3.png",
+//       },
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//     ],
+//   },
+//   {
+//     image: "/img/event-1.png",
+//     title: "Art4 Member Monday",
+//     gallery: [
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//       {
+//         image: "/img/event-3.png",
+//       },
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//     ],
+//   },
+//   {
+//     image: "/img/event-2.png",
+//     title: "Art5 Member Monday",
+//     gallery: [
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//       {
+//         image: "/img/event-3.png",
+//       },
+//       {
+//         image: "/img/event-1.png",
+//       },
+//       {
+//         image: "/img/event-2.png",
+//       },
+//     ],
+//   },
+// ];
 
 function AllEvent() {
   const [key, setKey] = useState("AllEvent");
+  const { data, isLoading, isError, error } = useQuery(
+    ALL_QUERIES.QUERY_ALL_EVENTS(),
+    fetchAllEvent
+  );
+  if (isLoading) return <Loader />;
+
+  if (isError) return <p>{error}</p>;
 
   const RenderEvent = () => {
     return (
       <Row>
-        {eventData?.map((data) => (
-          <Col md={4} className="mb-3">
-            <Event
-              event={data}
-              showArrowOnHover
-              showGalleryOnHover
-              customGridClass="customGridClass"
-            />
+        {data?.data?.data?.map((event) => (
+          <Col md={4} className="mb-3" key={event.id}>
+            <Event event={event} />
           </Col>
         ))}
       </Row>
@@ -189,7 +195,13 @@ function AllEvent() {
             </Col>
           </Row>
           <Row>
-            <Col>{randomTabContent()}</Col>
+            <Col>
+              {data?.data?.data?.length === 0 && !isLoading ? (
+                <p className="no-data">No Event found</p>
+              ) : (
+                randomTabContent()
+              )}
+            </Col>
           </Row>
         </Container>
       </section>

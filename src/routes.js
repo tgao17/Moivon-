@@ -14,7 +14,7 @@ function NavigationRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/all-events" element={<AllEvent />} />
-        <Route path="/event-detail" element={<EventDetail />} />
+        <Route path="/event-detail/:eventId" element={<EventDetail />} />
         <Route path="/upload-event" element={<UploadEvent />} />
       </Routes>
       <Footer />

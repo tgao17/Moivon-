@@ -283,6 +283,13 @@ button:focus {
   background-color: var(--theme-black) !important;
 }
 
+
+.no-data{
+  text-align: center;
+    padding: 90px 0;
+    color: #fff;
+    font-size: 30px;
+}
 @media screen and (max-width: 768px) {
   .section {
     padding: 20px 0;

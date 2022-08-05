@@ -15,88 +15,42 @@ import { Link } from "react-router-dom";
 import { FiArrowUpRight } from "react-icons/fi";
 import Event from "../../components/Event";
 import RouteTitle from "../../components/RouteTitle/RouteTitle";
+import { useParams } from "react-router-dom";
+import { utcToZonedTime } from "date-fns-tz";
+import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { ALL_QUERIES } from "../../utils/endpoints";
+import { fetchRelatedEvents, fetchSingleEvent } from "../../services/Events";
+import { prepareImageSrc } from "../../utils/api";
+import { formatCurrency } from "../../utils/helpers";
+import Loader from "../../components/Loader";
 
-const eventImg = [
-  {
-    image: "/img/detail-img.png",
-  },
-  {
-    image: "/img/detail-img.png",
-  },
-  {
-    image: "/img/detail-img.png",
-  },
-];
-
-const eventData = [
-  {
-    image: "/img/event-1.png",
-    title: "Art1 Member Monday",
-    gallery: [
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-      {
-        image: "/img/event-3.png",
-      },
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-    ],
-  },
-  {
-    image: "/img/event-2.png",
-    title: "Art2 Member Monday",
-    gallery: [
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-      {
-        image: "/img/event-3.png",
-      },
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-    ],
-  },
-  {
-    image: "/img/event-3.png",
-    title: "Art3 Member Monday",
-    gallery: [
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-      {
-        image: "/img/event-3.png",
-      },
-      {
-        image: "/img/event-1.png",
-      },
-      {
-        image: "/img/event-2.png",
-      },
-    ],
-  },
-];
 function EventDetail() {
   const pagination = {
     clickable: true,
   };
+  const { eventId } = useParams();
+
+  // fetching single event to show
+  const { data, isLoading, isError, error } = useQuery(
+    ALL_QUERIES.QUERY_SINGLE_EVENT({ eventId }),
+    () => fetchSingleEvent({ eventId })
+  );
+
+  // fetching all events to show at the bottom
+  const {
+    data: allEventsData,
+    isLoading: allEventsIsLoading,
+    isError: allEventsIsError,
+    error: allEventError,
+  } = useQuery(ALL_QUERIES.QUERY_RELATED_EVENTS(), fetchRelatedEvents);
+
+  if (isLoading) return <Loader />;
+
+  if (isError) return <p>{error}</p>;
+
+  console.log(data, "Data from a single query!");
+
   return (
     <>
       <RouteTitle title="Event Detail" />
@@ -109,7 +63,7 @@ function EventDetail() {
                   className={`${styles.eventHead} d-flex align-items-center gap-3 flex-wrap`}
                 >
                   <Heading mb="0" variant="subHeading">
-                    365 Frames-Days
+                    {data?.data?.data?.title}
                   </Heading>
                   <span className={styles.type}>CLASSIC MUSEUM</span>
                 </div>
@@ -129,9 +83,12 @@ function EventDetail() {
                   onSlideChange={() => console.log("slide change")}
                   onSwiper={(swiper) => console.log(swiper)}
                 >
-                  {eventImg?.map((data, index) => (
-                    <SwiperSlide key={`event_image_${index}`}>
-                      <img src={data?.image} alt="" />
+                  {data?.data?.data?.images?.map((imageData) => (
+                    <SwiperSlide key={imageData._id}>
+                      <img
+                        src={prepareImageSrc(imageData?.image)}
+                        alt={imageData?._id}
+                      />
                     </SwiperSlide>
                   ))}
                 </Swiper>
@@ -142,53 +99,43 @@ function EventDetail() {
                 <div className={styles.gridDiv}>
                   <div className={`${styles.dateDiv}  ${styles.borderRight}`}>
                     <span className={styles.title}>Date</span>
-                    <span className={styles.date}>30 june</span>
+                    <span className={styles.date}>
+                      {format(new Date(data?.data?.data?.dates), "dd LLL yyyy")}
+                    </span>
                   </div>
                   <div
                     className={`${styles.locationDiv}  ${styles.borderRight}`}
                   >
                     <span className={styles.title}>Location</span>
-                    <span className={styles.location}>Bourbon st, 40</span>
+                    <span className={styles.location}>
+                      {data?.data?.data?.location}
+                    </span>
                   </div>
                   <div className={`${styles.entryDiv}  ${styles.borderRight}`}>
                     <span className={styles.title}>DOORS OPEN</span>
-                    <span className={styles.entry}>11:30 AM</span>
+                    <span className={styles.entry}>
+                      {format(
+                        new Date(
+                          utcToZonedTime(data?.data?.data?.dates, "utc")
+                        ),
+                        "HH:MM a"
+                      )}
+                    </span>
                   </div>
                   <div className={`${styles.entryDiv}  ${styles.borderRight}`}>
                     <span className={styles.title}>Entry fee</span>
-                    <span className={styles.entry}>$150,00</span>
+                    <span className={styles.entry}>
+                      {formatCurrency(data?.data?.data?.price)}
+                    </span>
                   </div>
                 </div>
                 <div className={`border-b ${styles.aboutContent}`}>
                   <h3>About event</h3>
-                  <Text>
-                    “I try to make work that joins the seductions of wishful
-                    thinking with the criticality of knowing better,” Barbara
-                    Kruger has said. An incisive critic of popular culture,
-                    Kruger addresses the viewer directly as a way of exposing
-                    the power dynamics underlying identity, desire, and
-                    consumerism. Kruger’s large-scale commission for MoMA will
-                    envelop the Marron Family Atrium with the artist’s bold
-                    textual statements about truth, belief, and power. Combining
-                    images drawn from mass-media photographs with provocatively
-                    concise language, Kruger has been creating explorations of
-                    social relationships imbued with her distinctive sense of
-                    urgency and humor for more than 40 years. MoMA’s
-                    installation will tap into the artist’s long-standing
-                    interest in architecture to immerse viewers in a
-                    thought-provoking environment, offering multiple points of
-                    entry and perspective. With characteristic force, the work
-                    will explore the ways that relationships between spatial and
-                    political power invariably relate to considerations of
-                    inclusion and exclusion, dominance and agency.
-                  </Text>
+                  <Text>{data?.data?.data?.description}</Text>
                 </div>
                 <div className={`border-b ${styles.aboutContent}`}>
                   <h3>VENUE</h3>
-                  <Text>
-                    Superior Ingredients (Main Room) <br /> 74 Wythe Ave,
-                    Brooklyn, NY 11249, USA <br /> Doors open: 11:30 AM
-                  </Text>
+                  <Text>{data?.data?.data?.venue}</Text>
                   <Button type="outline">OPEN MAP</Button>
                 </div>
                 <div className={`border-b ${styles.aboutContent}`}>
@@ -200,12 +147,7 @@ function EventDetail() {
                       <span>eVENTS ORGANIZATOR</span>
                     </div>
                   </div>
-                  <Text>
-                    Libero et, lorem consectetur ac augue nisl. Nunc accumsan
-                    rhoncus congue quisque at praesentyi vulputate consectetur.
-                    Eu, auctor duis egestas nulla at praesentyi vulputate
-                    consectetur nsectetur ac augu
-                  </Text>
+                  <Text>{data?.data?.data?.eventOrgDetail}</Text>
                   <Button type="outline">VISIT WEBSITE</Button>
                 </div>
               </div>
@@ -233,17 +175,23 @@ function EventDetail() {
         <Container>
           {/* ${styles.slider} */}
           <div className={`mx-0 `}>
-            <Row>
-              {eventData?.map((data) => (
-                <Col md={4}>
-                  <Event
-                    event={data}
-                    showArrowOnHover
-                    customGridClass="customGridClass"
-                  />
-                </Col>
-              ))}
-            </Row>
+            {allEventsIsLoading ? (
+              <Loader />
+            ) : allEventsIsError ? (
+              <p>{allEventError}</p>
+            ) : (
+              <Row>
+                {allEventsData?.data?.data?.map((event) => (
+                  <Col md={4}>
+                    <Event
+                      event={event}
+                      showArrowOnHover
+                      customGridClass="customGridClass"
+                    />
+                  </Col>
+                ))}
+              </Row>
+            )}
           </div>
         </Container>
       </section>

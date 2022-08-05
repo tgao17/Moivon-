@@ -6,20 +6,25 @@ export const fetchAllEvent = async () => {
   return axiosInstance.get(ALL_ENDPOINTS.BUILD_ALL_EVENTS());
 };
 
+export const fetchRelatedEvents = async () => {
+  return axiosInstance.get(ALL_ENDPOINTS.BUILD_RELATED_EVENTS());
+};
+
 export const fetchSingleEvent = async ({ eventId }) => {
   return axiosInstance.get(ALL_ENDPOINTS.BUILD_SINGLE_EVENT({ eventId }));
 };
 
 export const createPublicEvent = ({ images, json_data }) => {
-  console.log({ images, json_data }, "CREATE PUBLIC EVENT!");
   const formData = new FormData();
   // append multiple images
-  images.forEach((image) => formData.append("image", image));
-
-  Object.entries(json_data).forEach(([key, value]) => {
-    formData.append(key, value);
-  });
-
+  images.forEach((image) => formData.append("files.image", image, image.name));
+  formData.append(
+    "data",
+    JSON.stringify({
+      ...json_data,
+      publishedAt: null,
+    })
+  );
   return axiosInstance.post(
     ALL_ENDPOINTS.BUILD_POST_NEW_EVENT(),
     formData,
