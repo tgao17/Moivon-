@@ -26,6 +26,7 @@ import {
   Link,
 } from "react-router-dom";
 import { fetchAllGenres } from "../../services/GenreService";
+import EventLoadingTile from "../../components/EventLoadingTile";
 
 const PER_PAGE = 10;
 
@@ -91,8 +92,6 @@ function AllEvent() {
       },
     }
   );
-
-  if (isLoading) return <Loader />;
 
   const computedDataArray =
     eventsData?.pages?.flatMap((page) => page.data?.data) || [];
@@ -212,23 +211,31 @@ function AllEvent() {
           </Row>
           <Row>
             <Col>
-              {!isLoading && isError ? (
-                <p className="no-data">
-                  {error?.response?.data?.error || error.toString()}
-                </p>
+              {isLoading ? (
+                <div className="d-flex justify-content-center align-items-center flex-wrap gap-3">
+                  <EventLoadingTile tileCount={9} />
+                </div>
               ) : (
                 <>
-                  {computedDataArray.length === 0 && !isLoading ? (
-                    <p className="no-data">No Event found</p>
+                  {!isLoading && isError ? (
+                    <p className="no-data">
+                      {error?.response?.data?.error || error.toString()}
+                    </p>
                   ) : (
-                    <InfiniteScroll
-                      dataLength={computedDataArray.length}
-                      next={fetchNextPage}
-                      hasMore={hasNextPage}
-                      loader={<h4>Loading...</h4>}
-                    >
-                      {randomTabContent()}
-                    </InfiniteScroll>
+                    <>
+                      {computedDataArray.length === 0 && !isLoading ? (
+                        <p className="no-data">No Event found</p>
+                      ) : (
+                        <InfiniteScroll
+                          dataLength={computedDataArray.length}
+                          next={fetchNextPage}
+                          hasMore={hasNextPage}
+                          loader={<h4>Loading...</h4>}
+                        >
+                          {randomTabContent()}
+                        </InfiniteScroll>
+                      )}
+                    </>
                   )}
                 </>
               )}
