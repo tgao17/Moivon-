@@ -231,7 +231,7 @@ button:focus {
 }
 
 .backgroundImage {
-  background-image: url(/public/img/bg.svg);
+  background-image: url(/public/img/bg.svg); 
 }
 .customGridClass .title {
   font-size: 12px !important;
@@ -381,4 +381,7 @@ button:focus {
   filter: brightness(1.1);
   -webkit-filter: brightness(1.1);
   -moz-filter: brightness(1.1);
+}
+.bg-transparent{
+  background-image:url('/public/img/hero.png');
 }

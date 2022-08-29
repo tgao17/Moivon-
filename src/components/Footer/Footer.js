@@ -18,7 +18,7 @@ const Footer = () => {
 
   return (
     <>
-      <section className={`${styles.footerSection} section`}>
+      <section className={`${styles.footerSection} section d-none`}>
         <Container>
           <Row className="mb-4">
             <Col sm={8}>
