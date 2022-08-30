@@ -23,7 +23,7 @@ function Home() {
   return (
     <>
       <RouteTitle title="Home" />
-      <section id="section-space-container" className={`${styles.heroSection} section`}>
+      <section id="section-space-container-third" className={`${styles.heroSection} section`}>
         <Container>
           <Row>
             <Col lg={8}>
@@ -51,7 +51,7 @@ function Home() {
           </Row>
         </Container>
       </section>
-      <section id="section-space-container" className="section">
+      <section id="section-space-container-forth" className="section">
         <Container>
           <Row>
             <Col lg={7}>
@@ -92,10 +92,10 @@ function Home() {
         </Container>
       </section>
 
-      <section id="section-space-container" className={`section ${styles.bottomSection}`}>
+      <section id="section-space-container-second" className={`section ${styles.bottomSection}`}>
         <MostPopularAccordion />
       </section>
-      <section id="section-space-container" className="section">
+      <section id="section-space-container-forth" className="section">
         <Container>
           <Row>
             <Col md={8}>
