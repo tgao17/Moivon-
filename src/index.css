@@ -80,7 +80,7 @@ code {
 .navbar.active{
   background-color: black !important;
   transition-property: background-color;
-  transition-duration: 1s;
+  transition-duration: 1ms;
   transition-timing-function: ease-out;
 }
 .section {
