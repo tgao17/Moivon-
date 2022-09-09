@@ -23,7 +23,7 @@
   top: 20px;
   right: 40px;
   z-index: 2;
-  background: rgb(53, 47, 42);
+  background: rgba(37, 37, 37, 0.6);
   padding: 8px 12px;
 }
 
@@ -47,6 +47,10 @@
   padding: 5px 10px;
   font-family: var(--sans-medium);
   margin-right: 1rem;
+}
+
+.content {
+  margin-top: 42px !important;
 }
 
 .content h3 {
@@ -192,6 +196,19 @@
   display: inline-block;
   margin-right: 2px;
 }
+
+@media screen and (max-width: 1115px) {
+
+  .dateDiv .date,
+  .locationDiv .location,
+  .entryDiv .entry {
+    white-space: normal !important;
+    width: auto !important;
+  }
+
+}
+
+
 
 @media screen and (max-width: 768px) {
 

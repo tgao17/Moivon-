@@ -87,8 +87,15 @@
 }
 
 @media screen and (max-width: 570px) {
-  .navBarCustom .last {
+  .last .customIcon {
     display: none !important;
+  }
+
+  .uploadButton button {
+    border-radius: 15px !important;
+    width: 120px !important;
+    height: 40px !important;
+    padding: 0 0 !important;
   }
 
   .navbarCollapse {
