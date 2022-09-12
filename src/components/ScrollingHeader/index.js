@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import styles from "./index.module.css";
 import Container from "react-bootstrap/Container";
@@ -12,6 +12,7 @@ import NavigationDropdown from "../NavigationDropdown";
 
 function ScrollingHeader({ genres = [] }, headerRef) {
   const { pathname } = useLocation();
+  const [expanded, setExpanded] = useState(false);
   let path = window.location.pathname;
   const scrollingref = useRef("");
   useEffect(() => {
@@ -23,11 +24,15 @@ function ScrollingHeader({ genres = [] }, headerRef) {
   useEffect(() => {
     document.addEventListener("click", handleOutsideScroll);
   }, []);
+  const onToggle = () => {
+    setExpanded(!expanded);
+  };
   const handleOutsideScroll = (e) => {
     if (!scrollingref.current.contains(e.target)) {
       document
         .querySelector(".app-header .scrolling-header .navbar-collapse")
         .classList.remove("show");
+      setExpanded(false);
     }
   };
   const navigate = useNavigate();
@@ -40,6 +45,8 @@ function ScrollingHeader({ genres = [] }, headerRef) {
           bg="transparent"
           expand="lg"
           ref={headerRef}
+          expanded={expanded}
+          onToggle={onToggle}
         >
           <Container>
             <Navbar.Brand

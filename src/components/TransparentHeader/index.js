@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import styles from "./index.module.css";
 import Container from "react-bootstrap/Container";
@@ -13,14 +13,19 @@ import NavigationDropdown from "../NavigationDropdown";
 function TransparentHeader({ genres = [] }, headerRef) {
   const { pathname } = useLocation();
   const transparentRef = useRef("");
+  const [expanded, setExpanded] = useState(false);
   useEffect(() => {
     document.addEventListener("click", handleOutside);
   }, []);
+  const onToggle = () => {
+    setExpanded(!expanded);
+  };
   const handleOutside = (e) => {
     if (!transparentRef.current.contains(e.target)) {
       document
         .querySelector(".app-header .transparent-header .navbar-collapse")
         .classList.remove("show");
+      setExpanded(false);
     }
   };
   let path = window.location.pathname;
@@ -44,6 +49,8 @@ function TransparentHeader({ genres = [] }, headerRef) {
           bg="transparent"
           expand="lg"
           ref={headerRef}
+          expanded={expanded}
+          onToggle={onToggle}
         >
           <Container>
             <Navbar.Brand
