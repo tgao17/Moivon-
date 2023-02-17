@@ -180,7 +180,7 @@ const Footer = () => {
           <Row className={styles.copyRight}>
             <Col md={6}>
               <div className="text-center">
-                <Text>2022 All rights reserved — Moivon</Text>
+                <Text>{new Date().getFullYear()} All rights reserved — Moivon</Text>
               </div>
             </Col>
             <Col md={6}>
